@@ -14,6 +14,7 @@ block content
 		div.col-md-6.col-md-offst-3
 			p #{text}
 			button#show-metrics(type="button" class="btn btn-success") Bring the metrics
+			button#logout(type="button" class="btn btn-danger") Logout
 			#metrics
 
 		script
@@ -26,3 +27,6 @@ block content
 							content += "<li>timestamp: #{d.timestamp}, value: #{d.value}</li>"
 						content += "</ul>"
 						$('#metrics').append content
+				$('#logout').click (e) ->
+					$.get "/", {}, () ->
+						document.location.href = '/auth'
