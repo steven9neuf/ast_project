@@ -89,7 +89,7 @@ app.get '/metrics.json', (req, res) ->
 		if data == null
 			res.status(404).json 'Data not found'
 		else
-		res.status(200).json data
+			res.status(200).json data
 
 
 app.get '/metrics.json/:id', (req, res) ->
