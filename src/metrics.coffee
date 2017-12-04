@@ -5,20 +5,19 @@ module.exports = (db) ->
   # - callback: the callback function, callback(err, data)
   get: (metrics, callback) ->
     db.get "metrics:", (err, data) ->
-      i = 1;
       metrics = {
-        metrics: {}
+        metrics: []
       }
       rs = db.createReadStream()
       rs.on 'data' , (data) ->
-        metric = 'metric' + i
-        metrics.metrics[metric] = {
+        metrics.metrics.push {
           key: data.key
           value: data.value
         }
-        i++
-      rs.on 'error', callback
-      rs.on 'close', callback
+      rs.on 'error', () ->
+
+      rs.on 'close', () ->
+
       rs.on 'end',  () ->
         console.log(metrics)
         callback null, metrics

@@ -22,9 +22,9 @@ block content
 				$('#show-metrics').click (e) ->
 					e.preventDefault()
 					$.getJSON "/metrics.json", {}, (data) ->
-						content = "<ul>"
-						for d in data
-							content += "<li>timestamp: #{d.timestamp}, value: #{d.value}</li>"
+						content = "<ul>"	
+						for metric in data.metrics
+							content += "<li>timestamp: #{metric.key}, value: #{metric.value}</li>"
 						content += "</ul>"
 						$('#metrics').append content
 				$('#logout').click (e) ->
