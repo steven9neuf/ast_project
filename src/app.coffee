@@ -84,12 +84,15 @@ app.get '/logout', authCheck, (req, res) ->
 ##########
 
 app.get '/metrics.json', (req, res) ->
-	metrics.get 2, (err, data) ->
-		throw err if err 
+	metrics.get req.params.metrics, (err, data) ->
+		throw next err if err
+		if data == null
+			res.status(404).json 'Data not found'
+		else
 		res.status(200).json data
 
 
-app.post '/metrics.json/:id', (req, res) ->
+app.get '/metrics.json/:id', (req, res) ->
 	metrics.save req.params.id, req.body, (err) ->
 		throw next err if err
 		res.status(200).send 'metrics saved'

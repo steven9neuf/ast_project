@@ -4,9 +4,9 @@
   "description": "Ece class project",
   "main": "src/app.coffee",
   "scripts": {
-    "test": "./bin/test tests/*",
-    "start": "./bin/start.sh",
-    "compile": "./bin/compile.sh"
+    "test": "bash ./bin/test tests/*",
+    "start": "bash ./bin/start.sh",
+    "compile": "bash ./bin/compile.sh"
   },
   "author": "steven wong",
   "license": "ISC",
