@@ -15,33 +15,34 @@ compilePug() {
 compileStylus() {
   echo "Compiling stylus files"
   echo "nothing to do"
+  node_modules/.bin/stylus styles/*.styl --out public/css
 }
 
-main() {  
-  case "$1" in 
+main() {
+  case "$1" in
   coffee)
-    compileCoffee
-    ;;
-    
+  compileCoffee
+  ;;
+
   pug)
-    compilePug
-    ;;
-    
+  compilePug
+  ;;
+
   stylus)
+  compileStylus
+  ;;
+
+  *)
+  #if [[ ! -z "$1" ]]; then
+    echo "Compiling everything"
+    compileCoffee
+    compilePug
     compileStylus
-    ;;
-    
-  *) 
-    if [[ ! -z "$1" ]]; then 
-      echo "Compiling everything"
-      compileCoffee
-      compilePug
-      compileStylus
-    fi;
-    ;;
+  #fi;
+  ;;
   esac
 
   echo "Done"
 }
 
-main $1
+main #$1

@@ -3,12 +3,11 @@ extend layout
 block head
 	script(type="text/javascript" src="/js/jquery-3.2.1.min.js" charset="utf-8")
 	script(type="text/javascript" src="/js/bootstrap.min.js" charset="utf-8")
-	script(type="text/javascript" src="/js/index.js" charset="utf-8")
+	link(rel="stylesheet" type="text/css" href="/css/chart.css")
 	link(rel="stylesheet" type="text/css" href="/css/bootstrap.min.css")
 	link(rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css")
 
 block content
-	
 
 	div.container
 		div.col-md-6.col-md-offst-3
@@ -16,17 +15,22 @@ block content
 			button#show-metrics(type="button" class="btn btn-success") Bring the metrics
 			button#logout(type="button" class="btn btn-danger") Logout
 			#metrics
+			#d3Chart
 
 		script
 			:coffee-script
 				$('#show-metrics').click (e) ->
 					e.preventDefault()
 					$.getJSON "/metrics.json", {}, (data) ->
-						content = "<ul>"	
+						content = "<form><select name='selectedMetric'>"
 						for metric in data.metrics
-							content += "<li>timestamp: #{metric.key}, value: #{metric.value}</li>"
-						content += "</ul>"
+							content += "<option value='#{metric.key}'>#{metric.key}</option>"
+						content += "</select><input type='submit'/></form>"
 						$('#metrics').append content
 				$('#logout').click (e) ->
 					$.get "/", {}, () ->
 						document.location.href = '/auth'
+
+	footer
+		script(type="text/javascript" src="https://d3js.org/d3.v4.min.js" charset="utf-8")
+		script(type="text/javascript" src="/js/index.js" charset="utf-8")

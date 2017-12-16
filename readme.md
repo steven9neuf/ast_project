@@ -51,3 +51,27 @@
  * JQuery documentation: https://code.jquery.com/
  * Bootstrap documentation: http://getbootstrap.com/
  * Level-up documentation: https://github.com/Level/levelup
+
+## Installation instruction
+
+Just clone it from github
+
+## Compile
+
+Use "bash bin/compile.sh"
+
+## Run
+
+Use "bash bin/start.sh"
+
+## Tests
+
+Use "bash bin/test.sh test/*"
+
+## Contributors
+
+Kevin GUOI - Steven WONG
+
+## License
+
+Apache2

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My Web Page</title>
+    <script type="text/javascript" src="/js/jquery-3.2.1.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="/css/chart.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-md-6 col-md-offst-3">
+        <p></p>
+        <button class="btn btn-success" id="show-metrics" type="button">Bring the metrics</button>
+        <button class="btn btn-danger" id="logout" type="button">Logout</button>
+        <div id="metrics"></div>
+        <div id="d3Chart"></div>
+      </div>
+      <script>(function() {
+  $('#show-metrics').click(function(e) {
+    e.preventDefault();
+    return $.getJSON("/metrics.json", {}, function(data) {
+      var content, i, len, metric, ref;
+      content = "<form><select name='selectedMetric'>";
+      ref = data.metrics;
+      for (i = 0, len = ref.length; i < len; i++) {
+        metric = ref[i];
+        content += "<option value='" + metric.key + "'>" + metric.key + "</option>";
+      }
+      content += "</select><input type='submit'/></form>";
+      return $('#metrics').append(content);
+    });
+  });
+
+  $('#logout').click(function(e) {
+    return $.get("/", {}, function() {
+      return document.location.href = '/auth';
+    });
+  });
+
+}).call(this);
+
+      </script>
+    </div>
+    <footer>
+      <script type="text/javascript" src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+      <script type="text/javascript" src="/js/index.js" charset="utf-8"></script>
+    </footer>
+  </body>
+</html>
