@@ -22,7 +22,7 @@ var getTimestamp = function(d) {
 var getValue = function(d) {
   var objectKey = Object.keys(d)[0];
   var value = d[objectKey].value;
-  return value/1000000000; //TODO à enlever
+  return value/1000000; //TODO à enlever après clean des données
 }
 
 // Function to draw graph
@@ -55,7 +55,7 @@ function drawGraph(raw_data) {
 
   var y = d3.scaleLinear()
     .range([height, 0])
-    .domain([yMin-10, yMax+10]);
+    .domain([yMin, yMax]);
 
   // Define the axes
   var xAxis = d3.axisBottom(x)
