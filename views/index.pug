@@ -25,8 +25,11 @@ block content
 						content = "<form><select name='selectedMetric'>"
 						for metric in data.metrics
 							content += "<option value='#{metric.key}'>#{metric.key}</option>"
-						content += "</select><input type='submit'/></form>"
+						content += "</form>"
+						$('#metrics').empty()
 						$('#metrics').append content
+						$('#d3Chart').empty()
+						drawGraph(data.metrics)
 				$('#logout').click (e) ->
 					$.get "/", {}, () ->
 						document.location.href = '/auth'
