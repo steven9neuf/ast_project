@@ -1,3 +1,29 @@
+// Default variables
+var margin = {
+    top: 30,
+    right: 20,
+    bottom: 50,
+    left: 50
+};
+
+var width = 800 - margin.left - margin.right;
+var height = 270 - margin.top - margin.bottom;
+var padding = 100;
+
+// Function to extract timestamp from key
+var getTimestamp = function(d) {
+  var objectKey = Object.keys(d)[0];
+  var temp = [];
+  temp = d[objectKey].key.split(":");
+  return temp[2];
+}
+
+// Function to get value
+var getValue = function(d) {
+  var objectKey = Object.keys(d)[0];
+  var value = d[objectKey].value;
+  return value/1000000000; //TODO à enlever
+}
 
 // Function to draw graph
 function drawGraph(raw_data) {
@@ -8,23 +34,6 @@ function drawGraph(raw_data) {
       );
   };
 
-  var margin = {
-      top: 30,
-      right: 20,
-      bottom: 50,
-      left: 50
-  };
-  var width = 940 - margin.left - margin.right;
-  var height = 270 - margin.top - margin.bottom;
-  var padding = 100;
-  var selectedCurrency = 'key';
-
-  var getValue = function(d) {
-  	var objectKey = Object.keys(d)[0];
-    var date = d[objectKey].value;// formatDate(d[objectKey].value*1000);
-  	return date;
-  }
-
   // Adds the svg canvas
   var svg = d3.select("#d3Chart")
       .append("svg")
@@ -34,24 +43,27 @@ function drawGraph(raw_data) {
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   // Set the ranges
-  var x = d3.scalePoint()
-  	.range([0, width])
-    .domain(data.map(d => Object.keys(d)[0]));
+  var xMin = d3.min(data, getTimestamp);
+  var xMax = d3.max(data, getTimestamp);
 
   var yMin = d3.min(data, getValue);
   var yMax = d3.max(data, getValue);
 
-  var y = d3.scaleTime()
-    .domain([yMin, yMax])
-    .range([height, 0]);
+  var x = d3.scaleTime()
+    .range([width, 0])
+    .domain([xMin, xMax]);
+
+  var y = d3.scaleLinear()
+    .range([height, 0])
+    .domain([yMin-10, yMax+10]);
 
   // Define the axes
   var xAxis = d3.axisBottom(x)
-      .tickSize(0,0) // Inner, Outer
+      .ticks(d3.timeYear)
+      .tickSize(0,0)
       .tickPadding(0);
 
   var yAxis = d3.axisLeft(y)
-      .ticks(d3.timeYear)
       .tickSize(-width, 0)
       .tickPadding(10);
 
@@ -77,7 +89,7 @@ function drawGraph(raw_data) {
   // Draw line
   var valueline = d3.line()
     .x(function (d) {
-      return x(Object.keys(d)[0]);
+      return x(getTimestamp(d));
     })
     .y(function (d) {
     	return y(getValue(d));
@@ -94,7 +106,7 @@ function drawGraph(raw_data) {
     .append("circle")
     .attr("class", "point")
     .attr('r', 4)
-    .attr("cx", d => x(Object.keys(d)[0]))
+    .attr("cx", d => x(getTimestamp(d)))
     .attr('cy', d => y(getValue(d)));
 
   // Write text
@@ -102,5 +114,5 @@ function drawGraph(raw_data) {
     .attr("text-anchor", "middle")
     .attr("transform", "translate("+ (width/2) +","+(height+(padding/3))+")")
     .attr("class", "axisTitle")
-    .text("Dates from metric");
+    .text("Dates from metrics");
   }
