@@ -51,9 +51,10 @@ app.get '/hello/:name', (req, res) ->
 ##########
 
 authCheck = (req, res, next) ->
-	unless req.session.loggedIn
+	unless req.session.loggedIn == true
 		res.redirect '/auth'
-	else next()
+	else
+		next()
 
 app.get '/auth', (req, res) ->
 	res.render 'auth'
@@ -92,7 +93,7 @@ app.get '/metrics.json', (req, res) ->
 			res.status(200).json data
 
 
-app.get '/metrics.json/:id', (req, res) ->
+app.post '/metrics.json/:id', (req, res) ->
 	metrics.save req.params.id, req.body, (err) ->
 		throw next err if err
 		res.status(200).send 'metrics saved'
@@ -116,10 +117,11 @@ user_router.get '/user/:username', (req, res) ->
 			res.status(200).json user
 
 user_router.post '/user', (req, res) ->
-	{username, password, email} = req.body.username
+	{username, password, email} = req.body
 	user.save username, password, email, (err) ->
 		throw next err if err
 		res.status(200).send "user saved"
+		console.log res.session
 
 app.use user_router
 
