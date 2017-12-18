@@ -38,6 +38,10 @@ module.exports = (db) ->
         value: value
     ws.end()
 
+  # delete(metrics, callback)
+  # Delete given metric
+  # - metric : key of the metric to be deleted
+  # - callback: the callback function
   delete: (metric, callback) ->
     db.del metric, (err) ->
        throw err if err
