@@ -31,13 +31,18 @@ app.use session
 	resave: true
 	saveUnitialized: true
 
-
+authCheck = (req, res, next) ->
+	console.log req.session
+	unless req.session.loggedIn == true
+		res.redirect '/auth'
+	else
+		next()
 
 
 ##############
 app.use '/', express.static "#{__dirname}/../public"
 
-app.get '/', (req, res) ->
+app.get '/', authCheck, (req, res) ->
 	res.render 'index',
 		text: "Hello #{req.session.username} !"
 
@@ -50,32 +55,28 @@ app.get '/hello/:name', (req, res) ->
 # Authentication
 ##########
 
-authCheck = (req, res, next) ->
-	unless req.session.loggedIn == true
-		res.redirect '/auth'
-	else
-		next()
 
-app.get '/auth', (req, res) ->
+
+app.get '/auth',(req, res) ->
 	res.render 'auth'
 
 app.post '/auth', (req, res) ->
 	{username, password} = req.body
-	user.get username, (err, user) ->
+	user.get username, password, (err, user) ->
 		throw next err if err
 		unless password == user.password
 			res.redirect '/auth'
 		else
-			res.session ?= {}
-			res.session.loggedIn = true
-			res.session.username = user.username
+			req.session ?= {}
+			req.session.loggedIn = true
+			req.session.username = user.username
+			console.log req.session
 			res.redirect '/'
 
 
-app.get '/logout', authCheck, (req, res) ->
-	delete res.session.loggedIn
-	delete res.session.username
-	delete res.session
+app.get '/logout', (req, res) ->
+	req.session.destroy()
+	console.log req.session
 	res.redirect '/auth'
 
 
@@ -85,12 +86,18 @@ app.get '/logout', authCheck, (req, res) ->
 ##########
 
 app.get '/metrics.json', (req, res) ->
-	metrics.get req.params.metrics, (err, data) ->
+	metrics.get req.params.metrics, req.session.username, (err, data) ->
 		throw next err if err
 		if data == null
 			res.status(404).json 'Data not found'
 		else
 			res.status(200).json data
+
+app.post '/deleteMetric/:metric', (req, res) ->
+	console.log req.params.metric
+	metrics.delete req.params.metric, (err) ->
+		throw next err if err 
+		res.status(200).send 'metric deleted'
 
 
 app.post '/metrics.json/:id', (req, res) ->

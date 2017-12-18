@@ -6,6 +6,7 @@ block head
 	link(rel="stylesheet" type="text/css" href="/css/chart.css")
 	link(rel="stylesheet" type="text/css" href="/css/bootstrap.min.css")
 	link(rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css")
+	link(rel="stylesheet" type="text/css" href="/css/index.css")
 
 block content
 
@@ -14,6 +15,7 @@ block content
 			p #{text}
 			button#show-metrics(type="button" class="btn btn-success") Bring the metrics
 			button#logout(type="button" class="btn btn-danger") Logout
+			button#deleteMetric(type="button" class="btn btn-danger") Delete metric
 			#metrics
 			#d3Chart
 
@@ -21,18 +23,26 @@ block content
 			:coffee-script
 				$('#show-metrics').click (e) ->
 					e.preventDefault()
+					$('#deleteMetric').show()
 					$.getJSON "/metrics.json", {}, (data) ->
-						content = "<form><select name='selectedMetric'>"
+						content = "<form><select id='selection' name='selectedMetric'>"
 						for metric in data.metrics
 							content += "<option value='#{metric.key}'>#{metric.key}</option>"
-						content += "</form>"
+						content += "</select></form>"
 						$('#metrics').empty()
 						$('#metrics').append content
 						$('#d3Chart').empty()
 						drawGraph(data.metrics)
 				$('#logout').click (e) ->
 					$.get "/", {}, () ->
-						document.location.href = '/auth'
+						document.location.href = '/logout'
+				$('#deleteMetric').click (e) ->
+					e.preventDefault()
+					selection = $('#selection option:selected').text()
+					console.log selection
+					$.post "/deleteMetric/#{selection}" 
+					document.location.href = '/'
+					
 
 	footer
 		script(type="text/javascript" src="https://d3js.org/d3.v4.min.js" charset="utf-8")

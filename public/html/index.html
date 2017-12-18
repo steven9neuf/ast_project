@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/css/chart.css">
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
   </head>
   <body>
     <div class="container">
@@ -14,22 +15,23 @@
         <p></p>
         <button class="btn btn-success" id="show-metrics" type="button">Bring the metrics</button>
         <button class="btn btn-danger" id="logout" type="button">Logout</button>
+        <button class="btn btn-danger" id="deleteMetric" type="button">Delete metric</button>
         <div id="metrics"></div>
         <div id="d3Chart"></div>
       </div>
       <script>(function() {
   $('#show-metrics').click(function(e) {
     e.preventDefault();
+    $('#deleteMetric').show();
     return $.getJSON("/metrics.json", {}, function(data) {
       var content, i, len, metric, ref;
       content = "<form><select name='selectedMetric'>";
-      content += "test";
       ref = data.metrics;
       for (i = 0, len = ref.length; i < len; i++) {
         metric = ref[i];
         content += "<option value='" + metric.key + "'>" + metric.key + "</option>";
       }
-      content += "</form>";
+      content += "</select></form>";
       $('#metrics').empty();
       $('#metrics').append(content);
       $('#d3Chart').empty();
@@ -39,8 +41,13 @@
 
   $('#logout').click(function(e) {
     return $.get("/", {}, function() {
-      return document.location.href = '/auth';
+      return document.location.href = '/logout';
     });
+  });
+
+  $('#deleteMetric').click(function(e) {
+    alert("test");
+    return console.log("test");
   });
 
 }).call(this);

@@ -22,13 +22,16 @@ var getTimestamp = function(d) {
 var getValue = function(d) {
   var objectKey = Object.keys(d)[0];
   var value = d[objectKey].value;
-  return value/1000000; //TODO à enlever après clean des données
+  return value;
 }
 
 // Function to draw graph
 function drawGraph(raw_data) {
   var data = [];
+  yMax = Object.keys(raw_data)[0];
   for (var key in raw_data) {
+      if(parseInt(yMax) < parseInt(raw_data[key].value))
+        yMax = raw_data[key].value;
       data.push(
       	{ [key] : raw_data[key] }
       );
@@ -47,10 +50,10 @@ function drawGraph(raw_data) {
   var xMax = d3.max(data, getTimestamp);
 
   var yMin = d3.min(data, getValue);
-  var yMax = d3.max(data, getValue);
+  var yMax;
 
   var x = d3.scaleTime()
-    .range([width, 0])
+    .range([0, width])
     .domain([xMin, xMax]);
 
   var y = d3.scaleLinear()
@@ -61,7 +64,7 @@ function drawGraph(raw_data) {
   var xAxis = d3.axisBottom(x)
       .ticks(d3.timeYear)
       .tickSize(0,0)
-      .tickPadding(0);
+      .tickPadding(10);
 
   var yAxis = d3.axisLeft(y)
       .tickSize(-width, 0)

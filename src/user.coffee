@@ -1,22 +1,21 @@
 module.exports = (db) ->
-	get: (username, callback) ->
-		db.get "user:#{username}", (err, data) ->
+	get: (username_sent, password_sent, callback) ->
+		db.get "user:#{username_sent}", (err, data) ->
 			result = {}
 			rs = db.createReadStream()
 			rs.on 'data' , (data) ->
-				if data.key.match /user.*/
-					[user, username] = data.key.split ":"
-					[password, email] = data.value.split ":"
+				[user, username] = data.key.split ":"
+				[password, email] = data.value.split ":"
+				if username == username_sent && password == password_sent
 					result =
 						username: username
 						password: password
 						email: email
-					console.log(result)
 			rs.on 'error', () ->
 			rs.on 'close', () ->
 			rs.on 'end',  () ->
-        console.log(result)
-        callback null, result
+        		callback null, result
+
 
 	save: (username, passwd, email, callback) ->
 		ws = db.createWriteStream()

@@ -3,14 +3,15 @@ module.exports = (db) ->
   # Get metrics
   # - id: metric's id
   # - callback: the callback function, callback(err, data)
-  get: (metrics, callback) ->
+  get: (metrics, username, callback) ->
     db.get "metrics:", (err, data) ->
       metrics = {
         metrics: []
       }
       rs = db.createReadStream()
       rs.on 'data' , (data) ->
-        if data.key.match /metrics.*/
+        regex = new RegExp('metrics:' + username)
+        if (regex.test data.key)
           metrics.metrics.push {
             key: data.key
             value: data.value
@@ -36,3 +37,8 @@ module.exports = (db) ->
         key: "metrics:#{id}:#{timestamp}"
         value: value
     ws.end()
+
+  delete: (metric, callback) ->
+    db.del metric, (err) ->
+       throw err if err
+       callback null
