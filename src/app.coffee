@@ -86,7 +86,7 @@ app.get '/logout', (req, res) ->
 ##########
 
 app.get '/metrics.json', (req, res) ->
-	metrics.get req.params.metrics, req.session.username, (err, data) ->
+	metrics.get req.session.username, (err, data) ->
 		throw next err if err
 		if data == null
 			res.status(404).json 'Data not found'

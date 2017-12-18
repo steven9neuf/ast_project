@@ -3,7 +3,7 @@ module.exports = (db) ->
   # Get metrics
   # - id: metric's id
   # - callback: the callback function, callback(err, data)
-  get: (metrics, username, callback) ->
+  get: (username, callback) ->
     db.get "metrics:", (err, data) ->
       metrics = {
         metrics: []
