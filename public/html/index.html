@@ -23,13 +23,17 @@
     return $.getJSON("/metrics.json", {}, function(data) {
       var content, i, len, metric, ref;
       content = "<form><select name='selectedMetric'>";
+      content += "test";
       ref = data.metrics;
       for (i = 0, len = ref.length; i < len; i++) {
         metric = ref[i];
         content += "<option value='" + metric.key + "'>" + metric.key + "</option>";
       }
-      content += "</select><input type='submit'/></form>";
-      return $('#metrics').append(content);
+      content += "</form>";
+      $('#metrics').empty();
+      $('#metrics').append(content);
+      $('#d3Chart').empty();
+      return drawGraph(data.metrics);
     });
   });
 

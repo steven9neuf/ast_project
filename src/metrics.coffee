@@ -10,10 +10,11 @@ module.exports = (db) ->
       }
       rs = db.createReadStream()
       rs.on 'data' , (data) ->
-        metrics.metrics.push {
-          key: data.key
-          value: data.value
-        }
+        if(data.key.match /metrics.*/)
+          metrics.metrics.push {
+            key: data.key
+            value: data.value
+          }
       rs.on 'error', () ->
 
       rs.on 'close', () ->
@@ -32,9 +33,11 @@ module.exports = (db) ->
     ws.on 'error', callback
     ws.on 'close', callback
     timestamp = (new Date '2015-12-18 14:00 UTC').getTime()
-    id = 1
-    ws.write({ key: "metrics:#{id}:#{timestamp}", value: "#{timestamp}" })
+    #id = 1
+    #ws.write({ key: "metrics:#{id}:#{timestamp}", value: "#{timestamp}" })
+    console.log metrics
     for metric in metrics
+
       { timestamp, value } =  metric
       ws.write
         key: "metrics:#{id}:#{timestamp}"
