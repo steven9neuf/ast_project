@@ -30,10 +30,7 @@ module.exports = (db) ->
     ws = db.createWriteStream()
     ws.on 'error', callback
     ws.on 'close', callback
-    {timestamp, value} = metrics
-    ws.write({ key: "metrics:#{id}:#{timestamp}", value: "#{value}" })
     for metric in metrics
-
       { timestamp, value } =  metric
       ws.write
         key: "metrics:#{id}:#{timestamp}"
