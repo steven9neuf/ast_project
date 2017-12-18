@@ -56,17 +56,21 @@
 
 Just clone it from github
 
+## Populate the database
+
+Use `npm run populate`
+
 ## Compile
 
-Use "bash bin/compile.sh"
+Use `npm run compile`
 
 ## Run
 
-Use "bash bin/start.sh"
+Use `npm start`
 
 ## Tests
 
-Use "bash bin/test.sh test/*"
+Use `npm test`
 
 ## Contributors
 
