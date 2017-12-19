@@ -60,6 +60,14 @@ Just clone it from github
 
 Use `npm run populate`
 
+- User 1 :
+  - username : user1
+  - password : password
+- User 2 :
+  - username : user2
+  - password : password
+
+
 ## Compile
 
 Use `npm run compile`
